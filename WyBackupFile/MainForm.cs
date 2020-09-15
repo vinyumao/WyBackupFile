@@ -129,15 +129,20 @@ namespace WyBackupFile
             string filePath = contextMenuStripList.SourceControl.Text;
             if (filePath != null || filePath != "")
             {
-                FileInfo file = new FileInfo(tbTargetFilePath.Text + "\\" + filePath);
-                if (file.Exists)
+                if (MessageBox.Show("确定删除" + filePath + "?", "提示", MessageBoxButtons.OKCancel) == DialogResult.OK) 
                 {
-                    file.Delete();
-                    loadBackupFileToList(tbTargetFilePath.Text, false);
-                }
-                else
-                {
-                    MessageBox.Show("找不到文件");
+               
+                    FileInfo file = new FileInfo(tbTargetFilePath.Text + "\\" + filePath);
+                    if (file.Exists)
+                    {
+                        file.Delete();
+                        refreshList(tbTargetFilePath.Text);
+                        //loadBackupFileToList(tbTargetFilePath.Text, false);
+                    }
+                    else
+                    {
+                        MessageBox.Show("找不到文件");
+                    }
                 }
             }
             else
@@ -153,7 +158,7 @@ namespace WyBackupFile
             if (this.listBoxFileList.Items.Count > 0)
             {
                 this.listBoxFileList.ContextMenuStrip = this.contextMenuStripList;
-                this.listBoxFileList.SelectedIndex = 0;
+                this.listBoxFileList.SetSelected(0,true);
             }
         }
 
@@ -162,18 +167,71 @@ namespace WyBackupFile
             DirectoryInfo root = new DirectoryInfo(filePath);
             if (root.Exists)
             {
-                FileInfo[] fileInfos = root.GetFiles("*.zip");
-                string[] filesName = new string[fileInfos.Length];
-                for (int i = 0; i < fileInfos.Length; i++)
+                try
                 {
-                    filesName[i] = fileInfos[i].Name;
+                    FileInfo[] fileInfos = root.GetFiles("*.zip");
+                    string[] filesName = new string[fileInfos.Length];
+                    Console.WriteLine("fileInfos.Length;"+ fileInfos.Length);
+                    for (int i = 0; i < fileInfos.Length; i++)
+                    {
+                        Console.WriteLine("fileInfos ;"+ i + ":"+ fileInfos[i].Name);
+                        filesName[i] = fileInfos[i].Name;
+                    }
+                    this.listBoxFileList.BeginUpdate();
+                    this.listBoxFileList.Items.Clear();
+                    if (filesName.Length > 0)
+                    {
+                        Array.Reverse(filesName);
+                        this.listBoxFileList.Items.AddRange(filesName);
+                        attachMenuToList();
+                    }
+                    this.listBoxFileList.EndUpdate();
                 }
-                Array.Reverse(filesName);
-                this.listBoxFileList.Items.Clear();
-                this.listBoxFileList.Items.AddRange(filesName);
-                attachMenuToList();
+                catch (Exception e)
+                {
+                    backupResultLabel.Text = "加载列表失败:"+e.Message;
+                    backupResultLabel.ForeColor = Color.Red;
+                }
             }
             else if (showMsg)
+            {
+                MessageBox.Show("文件路径不存在!");
+            }
+        }
+
+        private void refreshList(string filePath)
+        {
+            DirectoryInfo root = new DirectoryInfo(filePath);
+            if (root.Exists)
+            {
+                try
+                {
+                    FileInfo[] fileInfos = root.GetFiles("*.zip");
+                    string[] filesName = new string[fileInfos.Length];
+                    Console.WriteLine("fileInfos.Length;" + fileInfos.Length);
+                    for (int i = 0; i < fileInfos.Length; i++)
+                    {
+                        Console.WriteLine("fileInfos ;" + i + ":" + fileInfos[i].Name);
+                        filesName[i] = fileInfos[i].Name;
+                    }
+                    this.listBoxFileList.BeginUpdate();
+                    this.listBoxFileList.Items.Clear();
+                    if (filesName.Length > 0)
+                    {
+                        Array.Reverse(filesName);
+                        this.listBoxFileList.Items.AddRange(filesName);
+                        attachMenuToList();
+                    }
+                    this.listBoxFileList.EndUpdate();
+
+                }
+                catch (Exception e)
+                {
+                    backupResultLabel.Text = "加载列表失败:" + e.Message;
+                    backupResultLabel.ForeColor = Color.Red;
+                }
+            }
+            else
             {
                 MessageBox.Show("文件路径不存在!");
             }
@@ -228,6 +286,10 @@ namespace WyBackupFile
                         {
                             config.MaxBackupCount = reader.ReadElementContentAsInt();
                         }
+                        if (reader.Name == "ProcessPath")
+                        { 
+                            config.ProcessPath = reader.ReadElementString().Trim();
+                        }
                     }
                 }
             }
@@ -246,6 +308,10 @@ namespace WyBackupFile
             {
                 tbTargetFilePath.Text = config.TargetFilePath;
                 loadBackupFileToList(tbTargetFilePath.Text, false);
+            }
+            if (config.ProcessPath != null && config.ProcessPath != "")
+            {
+                textBoxProcessPath.Text = config.ProcessPath;
             }
             if (config.Duration >= minDuration && config.Duration <= maxDuration)
             {
@@ -276,6 +342,10 @@ namespace WyBackupFile
                 writer.WriteStartElement("Setting");
                 writer.WriteElementString("SourcePath", tbSourceFilePath.Text);
                 writer.WriteElementString("TargetPath", tbTargetFilePath.Text);
+                if(textBoxProcessPath.Text != null && textBoxProcessPath.Text.Trim() != "")
+                {
+                    writer.WriteElementString("ProcessPath", textBoxProcessPath.Text);
+                }
                 writer.WriteElementString("Duration", nUDDuration.Value + "");
                 writer.WriteElementString("MaxBackupCount", nUDMaxBackupCount.Value + "");
                 writer.WriteEndElement();
@@ -560,6 +630,58 @@ namespace WyBackupFile
             {
                 throw e;
             }
+        }
+
+        private void RecoverAndRunGame(object sender, EventArgs e)
+        {
+            if (textBoxProcessPath.Text == null || textBoxProcessPath.Text.Trim() == "")
+            {
+                MessageBox.Show("请先输入程序路径!");
+                return;
+            }
+            DirectoryInfo sourceDirectory = new DirectoryInfo(tbSourceFilePath.Text);
+            DirectoryInfo targetDirectory = new DirectoryInfo(tbTargetFilePath.Text);
+            string sourceFilePath = sourceDirectory.FullName;
+            string filePath = contextMenuStripList.SourceControl.Text;
+            string targetFileFullName = targetDirectory + "\\" + filePath;
+            if (sourceDirectory.Exists && targetDirectory.Exists)
+            {
+                try
+                {
+                    FileInfo zipFile = new FileInfo(targetFileFullName);
+                    if (!zipFile.Exists)
+                    {
+                        MessageBox.Show("备份文件没找到");
+                        return;
+                    }
+                    else
+                    {
+                        deleteDirChildFile(sourceFilePath);
+                        String zipFileName = zipFile.FullName;
+                        ZipFile.ExtractToDirectory(@zipFileName, @sourceFilePath); //解压
+                        if (textBoxProcessPath.Text != null && textBoxProcessPath.Text.Trim() != "")
+                        {
+                            RunProcess(textBoxProcessPath.Text);
+                        }
+                        backupResultLabel.Text = "还原成功!程序启动中..";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("还原运行程序失败:" + ex.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show("路径不存在");
+            }
+        }
+
+        private void RunProcess(String processPath)
+        {
+            System.Diagnostics.Process startProc = new System.Diagnostics.Process();
+            startProc.StartInfo.FileName = processPath;
+            startProc.Start();
         }
     }
 }

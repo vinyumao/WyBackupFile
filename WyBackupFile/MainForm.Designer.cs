@@ -46,6 +46,7 @@
             this.openSorceFloderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.recoverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deletFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.RecoverRunGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.btnBackupToggle = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -53,6 +54,8 @@
             this.backupResultLabel = new System.Windows.Forms.Label();
             this.btnBackupNow = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.label7 = new System.Windows.Forms.Label();
+            this.textBoxProcessPath = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.nUDDuration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nUDMaxBackupCount)).BeginInit();
             this.contextMenuStripList.SuspendLayout();
@@ -192,37 +195,45 @@
             this.showInExplorerMenuItem,
             this.openSorceFloderToolStripMenuItem,
             this.recoverToolStripMenuItem,
+            this.RecoverRunGameToolStripMenuItem,
             this.deletFileToolStripMenuItem});
             this.contextMenuStripList.Name = "contextMenuStripList";
-            this.contextMenuStripList.Size = new System.Drawing.Size(149, 92);
+            this.contextMenuStripList.Size = new System.Drawing.Size(181, 136);
             // 
             // showInExplorerMenuItem
             // 
             this.showInExplorerMenuItem.Name = "showInExplorerMenuItem";
-            this.showInExplorerMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.showInExplorerMenuItem.Size = new System.Drawing.Size(180, 22);
             this.showInExplorerMenuItem.Text = "打开文件夹";
             this.showInExplorerMenuItem.Click += new System.EventHandler(this.showInExplorer);
             // 
             // openSorceFloderToolStripMenuItem
             // 
             this.openSorceFloderToolStripMenuItem.Name = "openSorceFloderToolStripMenuItem";
-            this.openSorceFloderToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.openSorceFloderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openSorceFloderToolStripMenuItem.Text = "打开源文件夹";
             this.openSorceFloderToolStripMenuItem.Click += new System.EventHandler(this.openSorceFloder);
             // 
             // recoverToolStripMenuItem
             // 
             this.recoverToolStripMenuItem.Name = "recoverToolStripMenuItem";
-            this.recoverToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.recoverToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.recoverToolStripMenuItem.Text = "还原";
             this.recoverToolStripMenuItem.Click += new System.EventHandler(this.recoverBackupFile);
             // 
             // deletFileToolStripMenuItem
             // 
             this.deletFileToolStripMenuItem.Name = "deletFileToolStripMenuItem";
-            this.deletFileToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.deletFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.deletFileToolStripMenuItem.Text = "删除";
             this.deletFileToolStripMenuItem.Click += new System.EventHandler(this.deleteFile);
+            // 
+            // RecoverRunGameToolStripMenuItem
+            // 
+            this.RecoverRunGameToolStripMenuItem.Name = "RecoverRunGameToolStripMenuItem";
+            this.RecoverRunGameToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.RecoverRunGameToolStripMenuItem.Text = "还原并启动程序";
+            this.RecoverRunGameToolStripMenuItem.Click += new System.EventHandler(this.RecoverAndRunGame);
             // 
             // contextMenuStrip1
             // 
@@ -272,11 +283,29 @@
             this.btnBackupNow.UseVisualStyleBackColor = true;
             this.btnBackupNow.Click += new System.EventHandler(this.backupNow);
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(8, 86);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(95, 12);
+            this.label7.TabIndex = 15;
+            this.label7.Text = "程序路径(选填):";
+            // 
+            // textBoxProcessPath
+            // 
+            this.textBoxProcessPath.Location = new System.Drawing.Point(109, 83);
+            this.textBoxProcessPath.Name = "textBoxProcessPath";
+            this.textBoxProcessPath.Size = new System.Drawing.Size(332, 21);
+            this.textBoxProcessPath.TabIndex = 16;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(476, 445);
+            this.Controls.Add(this.textBoxProcessPath);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.btnBackupNow);
             this.Controls.Add(this.backupResultLabel);
             this.Controls.Add(this.label6);
@@ -293,7 +322,7 @@
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
-            this.Text = "Wy定时备份工具";
+            this.Text = "Wy定时备份工具 1.1";
             ((System.ComponentModel.ISupportInitialize)(this.nUDDuration)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nUDMaxBackupCount)).EndInit();
             this.contextMenuStripList.ResumeLayout(false);
@@ -327,6 +356,9 @@
         private System.Windows.Forms.ToolStripMenuItem recoverToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openSorceFloderToolStripMenuItem;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ToolStripMenuItem RecoverRunGameToolStripMenuItem;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox textBoxProcessPath;
     }
 }
 
