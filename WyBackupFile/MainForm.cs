@@ -634,6 +634,11 @@ namespace WyBackupFile
 
         private void RecoverAndRunGame(object sender, EventArgs e)
         {
+            realRecoverAndRunGame();
+        }
+
+        private void realRecoverAndRunGame() 
+        {
             if (textBoxProcessPath.Text == null || textBoxProcessPath.Text.Trim() == "")
             {
                 MessageBox.Show("请先输入程序路径!");
@@ -642,7 +647,7 @@ namespace WyBackupFile
             DirectoryInfo sourceDirectory = new DirectoryInfo(tbSourceFilePath.Text);
             DirectoryInfo targetDirectory = new DirectoryInfo(tbTargetFilePath.Text);
             string sourceFilePath = sourceDirectory.FullName;
-            string filePath = contextMenuStripList.SourceControl.Text;
+            string filePath = listBoxFileList.SelectedItem.ToString();
             string targetFileFullName = targetDirectory + "\\" + filePath;
             if (sourceDirectory.Exists && targetDirectory.Exists)
             {
@@ -682,6 +687,25 @@ namespace WyBackupFile
             System.Diagnostics.Process startProc = new System.Diagnostics.Process();
             startProc.StartInfo.FileName = processPath;
             startProc.Start();
+        }
+
+        //快捷键
+        private void fromKeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                switch (e.KeyCode)
+                {
+                    case Keys.F1:
+                        realRecoverAndRunGame();
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            
         }
     }
 }
