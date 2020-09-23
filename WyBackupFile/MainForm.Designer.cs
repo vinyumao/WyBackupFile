@@ -56,6 +56,7 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.label7 = new System.Windows.Forms.Label();
             this.textBoxProcessPath = new System.Windows.Forms.TextBox();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.nUDDuration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nUDMaxBackupCount)).BeginInit();
             this.contextMenuStripList.SuspendLayout();
@@ -198,26 +199,26 @@
             this.RecoverRunGameToolStripMenuItem,
             this.deletFileToolStripMenuItem});
             this.contextMenuStripList.Name = "contextMenuStripList";
-            this.contextMenuStripList.Size = new System.Drawing.Size(182, 136);
+            this.contextMenuStripList.Size = new System.Drawing.Size(182, 114);
             // 
             // showInExplorerMenuItem
             // 
             this.showInExplorerMenuItem.Name = "showInExplorerMenuItem";
-            this.showInExplorerMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.showInExplorerMenuItem.Size = new System.Drawing.Size(181, 22);
             this.showInExplorerMenuItem.Text = "打开文件夹";
             this.showInExplorerMenuItem.Click += new System.EventHandler(this.showInExplorer);
             // 
             // openSorceFloderToolStripMenuItem
             // 
             this.openSorceFloderToolStripMenuItem.Name = "openSorceFloderToolStripMenuItem";
-            this.openSorceFloderToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.openSorceFloderToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
             this.openSorceFloderToolStripMenuItem.Text = "打开源文件夹";
             this.openSorceFloderToolStripMenuItem.Click += new System.EventHandler(this.openSorceFloder);
             // 
             // recoverToolStripMenuItem
             // 
             this.recoverToolStripMenuItem.Name = "recoverToolStripMenuItem";
-            this.recoverToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.recoverToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
             this.recoverToolStripMenuItem.Text = "还原";
             this.recoverToolStripMenuItem.Click += new System.EventHandler(this.recoverBackupFile);
             // 
@@ -231,7 +232,7 @@
             // deletFileToolStripMenuItem
             // 
             this.deletFileToolStripMenuItem.Name = "deletFileToolStripMenuItem";
-            this.deletFileToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.deletFileToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
             this.deletFileToolStripMenuItem.Text = "删除";
             this.deletFileToolStripMenuItem.Click += new System.EventHandler(this.deleteFile);
             // 
@@ -299,6 +300,13 @@
             this.textBoxProcessPath.Size = new System.Drawing.Size(332, 21);
             this.textBoxProcessPath.TabIndex = 16;
             // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+            this.notifyIcon1.Text = "Wy定时备份工具";
+            this.notifyIcon1.Visible = true;
+            this.notifyIcon1.Click += new System.EventHandler(this.notifyIcon1_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -325,6 +333,7 @@
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Wy定时备份工具 1.1";
+            this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.fromKeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.nUDDuration)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nUDMaxBackupCount)).EndInit();
@@ -362,6 +371,7 @@
         private System.Windows.Forms.ToolStripMenuItem RecoverRunGameToolStripMenuItem;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox textBoxProcessPath;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
     }
 }
 

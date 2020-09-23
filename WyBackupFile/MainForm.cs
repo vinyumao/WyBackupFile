@@ -33,7 +33,6 @@ namespace WyBackupFile
         private int maxBackupCount = 100;
         private int defaultBackupCount = 50;
 
-
         public MainForm()
         {
             InitializeComponent();
@@ -706,6 +705,29 @@ namespace WyBackupFile
                 Console.WriteLine(ex.Message);
             }
             
+        }
+
+        private void MainForm_SizeChanged(object sender, EventArgs e)
+        {
+            //判断是否选择的是最小化按钮 
+            if (WindowState == FormWindowState.Minimized)
+            {
+                //图标显示在托盘区 
+                notifyIcon1.Visible = true;
+                this.ShowInTaskbar = false;
+            }
+        }
+
+        private void notifyIcon1_Click(object sender, EventArgs e)
+        {
+            //还原窗体显示 
+            WindowState = FormWindowState.Normal;
+            //激活窗体并给予它焦点 
+            this.Activate();
+            //任务栏区显示图标 
+            this.ShowInTaskbar = true;
+            //托盘区图标隐藏 
+            notifyIcon1.Visible = false;
         }
     }
 }
