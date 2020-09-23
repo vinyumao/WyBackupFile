@@ -4,4 +4,4 @@
   适用场景:需要经常备份小文件,比如备份游戏存档
   
 ### 截图
-![Image text](https://raw.githubusercontent.com/vinyumao/WyBackupFile/master/screenshot/screenshot.png)
+![Image text](https://raw.githubusercontent.com/vinyumao/WyBackupFile/master/screenshot/screenshot2.png)
