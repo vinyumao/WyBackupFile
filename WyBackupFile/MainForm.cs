@@ -789,13 +789,10 @@ namespace WyBackupFile
 
         private void autoRunCB_Click(object sender, EventArgs e)
         {
-            if (autoRunCB.Checked == true)
+            if (autoRunCB.Checked == true && checkPath())
             {
-                if (checkPath()) 
-                {
-                    autoRunCB.Checked = true;
-                    config.IsAutoBackup = true;
-                }
+                autoRunCB.Checked = true;
+                config.IsAutoBackup = true;
             }
             else 
             {
