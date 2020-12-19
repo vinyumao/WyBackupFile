@@ -57,6 +57,9 @@
             this.label7 = new System.Windows.Forms.Label();
             this.textBoxProcessPath = new System.Windows.Forms.TextBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.label8 = new System.Windows.Forms.Label();
+            this.autoRunCB = new System.Windows.Forms.CheckBox();
+            this.toolTip2 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.nUDDuration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nUDMaxBackupCount)).BeginInit();
             this.contextMenuStripList.SuspendLayout();
@@ -108,7 +111,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(22, 111);
+            this.label3.Location = new System.Drawing.Point(22, 118);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(83, 12);
             this.label3.TabIndex = 4;
@@ -119,12 +122,12 @@
             this.nUDDuration.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.nUDDuration.Location = new System.Drawing.Point(111, 109);
             this.nUDDuration.Maximum = new decimal(new int[] {
-            600,
+            86400,
             0,
             0,
             0});
             this.nUDDuration.Minimum = new decimal(new int[] {
-            30,
+            5,
             0,
             0,
             0});
@@ -140,11 +143,11 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(234, 111);
+            this.label4.Location = new System.Drawing.Point(244, 118);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(83, 12);
+            this.label4.Size = new System.Drawing.Size(125, 12);
             this.label4.TabIndex = 6;
-            this.label4.Text = "最大备份数量:";
+            this.label4.Text = "最大备份数量:(1-500)";
             // 
             // nUDMaxBackupCount
             // 
@@ -153,7 +156,12 @@
             0,
             0,
             0});
-            this.nUDMaxBackupCount.Location = new System.Drawing.Point(323, 109);
+            this.nUDMaxBackupCount.Location = new System.Drawing.Point(375, 110);
+            this.nUDMaxBackupCount.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
             this.nUDMaxBackupCount.Minimum = new decimal(new int[] {
             1,
             0,
@@ -307,11 +315,34 @@
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.Click += new System.EventHandler(this.notifyIcon1_Click);
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(179, 118);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(59, 12);
+            this.label8.TabIndex = 17;
+            this.label8.Text = "(5-86400)";
+            // 
+            // autoRunCB
+            // 
+            this.autoRunCB.AutoSize = true;
+            this.autoRunCB.Location = new System.Drawing.Point(5, 385);
+            this.autoRunCB.Name = "autoRunCB";
+            this.autoRunCB.Size = new System.Drawing.Size(96, 16);
+            this.autoRunCB.TabIndex = 18;
+            this.autoRunCB.Text = "自动启动运行";
+            this.autoRunCB.UseVisualStyleBackColor = true;
+            this.autoRunCB.Click += new System.EventHandler(this.autoRunCB_Click);
+            this.autoRunCB.MouseHover += new System.EventHandler(this.autoRunCB_MouseHover);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(476, 445);
+            this.Controls.Add(this.autoRunCB);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.textBoxProcessPath);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.btnBackupNow);
@@ -333,6 +364,7 @@
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Wy定时备份工具 1.1";
+            this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.fromKeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.nUDDuration)).EndInit();
@@ -372,6 +404,9 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox textBoxProcessPath;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.CheckBox autoRunCB;
+        private System.Windows.Forms.ToolTip toolTip2;
     }
 }
 

@@ -15,10 +15,12 @@ namespace WyBackupFile
 		private int duration;
 		private int maxBackupCount;
 		private string processPath;
+		private bool isAutoBackup;
 		public string TargetFilePath { get => targetFilePath; set => targetFilePath = value; }
 		public string SourceFilePath { get => sourceFilePath; set => sourceFilePath = value; }
 		public int Duration { get => duration; set => duration = value; }
 		public int MaxBackupCount { get => maxBackupCount; set => maxBackupCount = value; }
         public string ProcessPath { get => processPath; set => processPath = value; }
+		public bool IsAutoBackup { get => isAutoBackup; set => isAutoBackup = value; }
     }
 }

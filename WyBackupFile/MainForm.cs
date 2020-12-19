@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System.Xml;
 using System.IO.Compression;
+using System.Runtime.InteropServices;
 
 namespace WyBackupFile
 {
@@ -20,17 +21,18 @@ namespace WyBackupFile
         extern static System.IntPtr GetSystemMenu(System.IntPtr hWnd, System.IntPtr bRevert);
         [DllImport("user32.dll", EntryPoint = "RemoveMenu")]
         extern static int RemoveMenu(IntPtr hMenu, int nPos, int flags);
+
         static int MF_BYPOSITION = 0x400;
         static int MF_REMOVE = 0x1000;
 
         private Config config = new Config();
         private string xmlFile = Directory.GetCurrentDirectory() + "\\Config.xml";
         private bool isRunning = false;
-        private int minDuration = 30;
-        private int maxDuration = 600;
+        private int minDuration = 5;
+        private int maxDuration = 86400;
         private int defaultDuration = 120;
         private int minBackupCount = 1;
-        private int maxBackupCount = 100;
+        private int maxBackupCount = 500;
         private int defaultBackupCount = 50;
 
         public MainForm()
@@ -51,9 +53,18 @@ namespace WyBackupFile
             initToolTip();
         }
 
+        private void hideCursor(object sender) 
+        {
+            try
+            {
+                HideCaret(((TextBox)sender).Handle);
+            }
+            catch (Exception e) { }
+        }
+
         private void chooseSourceFilePath(object sender, EventArgs e)
         {
-            HideCaret(((TextBox)sender).Handle);
+            hideCursor(sender);
             if (tbSourceFilePath.Text != null && tbSourceFilePath.Text != "")
             {
                 DirectoryInfo sourceFile = new DirectoryInfo(tbSourceFilePath.Text);
@@ -75,12 +86,12 @@ namespace WyBackupFile
 
         private void textBoxGotFocus(object sender, EventArgs e)
         {
-            HideCaret(((TextBox)sender).Handle);
+            hideCursor(sender);
         }
 
         private void chooseTargetFilePath(object sender, EventArgs e)
         {
-            HideCaret(((TextBox)sender).Handle);
+            hideCursor(sender);
             if (tbTargetFilePath.Text != null && tbTargetFilePath.Text != "")
             {
                 DirectoryInfo targetFile = new DirectoryInfo(tbTargetFilePath.Text);
@@ -271,23 +282,27 @@ namespace WyBackupFile
                         if (reader.Name == "SourcePath")
                         {
                             config.SourceFilePath = reader.ReadElementString().Trim();
-                        }
-                        if (reader.Name == "TargetPath")
+                        } 
+                        else if (reader.Name == "TargetPath")
                         {
                             config.TargetFilePath = reader.ReadElementString().Trim();
                         }
-                        if (reader.Name == "Duration")
+                        else if (reader.Name == "Duration")
                         {
                             config.Duration = reader.ReadElementContentAsInt();
 
                         }
-                        if (reader.Name == "MaxBackupCount")
+                        else if (reader.Name == "MaxBackupCount")
                         {
                             config.MaxBackupCount = reader.ReadElementContentAsInt();
                         }
-                        if (reader.Name == "ProcessPath")
+                        else if(reader.Name == "ProcessPath")
                         { 
                             config.ProcessPath = reader.ReadElementString().Trim();
+                        }
+                        else if(reader.Name == "IsAutoBackup")
+                        {
+                            config.IsAutoBackup = Boolean.Parse(reader.ReadElementString());
                         }
                     }
                 }
@@ -328,6 +343,14 @@ namespace WyBackupFile
             {
                 nUDMaxBackupCount.Value = defaultBackupCount;
             }
+            if (config.IsAutoBackup == true)
+            {
+                autoRunCB.Checked = true;
+            }
+            else 
+            {
+                autoRunCB.Checked = false;
+            }
         }
 
         private void saveConfigXml()
@@ -347,6 +370,7 @@ namespace WyBackupFile
                 }
                 writer.WriteElementString("Duration", nUDDuration.Value + "");
                 writer.WriteElementString("MaxBackupCount", nUDMaxBackupCount.Value + "");
+                writer.WriteElementString("IsAutoBackup", autoRunCB.Checked.ToString());
                 writer.WriteEndElement();
                 writer.WriteEndDocument();
             }
@@ -360,11 +384,34 @@ namespace WyBackupFile
 
         private void btnBackupToggleClick(object sender, EventArgs e)
         {
-            DirectoryInfo sourceFile = new DirectoryInfo(tbSourceFilePath.Text);
-            DirectoryInfo targetFile = new DirectoryInfo(tbTargetFilePath.Text);
-            if (!sourceFile.Exists || !targetFile.Exists)
+            realAtuoBackup();
+        }
+
+        private Boolean checkPath()
+        {
+            try
             {
-                MessageBox.Show("路径不存在,请检查两个路径是否存在");
+                DirectoryInfo sourceFile = new DirectoryInfo(tbSourceFilePath.Text);
+                DirectoryInfo targetFile = new DirectoryInfo(tbTargetFilePath.Text);
+                if (!sourceFile.Exists || !targetFile.Exists)
+                {
+                    MessageBox.Show("路径不存在,请检查两个路径是否存在");
+                    return false;
+                }
+                return true;
+            }
+            catch (Exception e) 
+            {
+                MessageBox.Show(e.Message);
+                return false;
+            }
+            
+        }
+
+        private void realAtuoBackup() 
+        {
+            if (!checkPath())
+            {
                 return;
             }
             isRunning = !isRunning;
@@ -409,6 +456,11 @@ namespace WyBackupFile
             toolTip1.InitialDelay = 1000;
             toolTip1.ReshowDelay = 500;
             toolTip1.ShowAlways = true;
+
+            toolTip2.AutoPopDelay = 5000;
+            toolTip2.InitialDelay = 1000;
+            toolTip2.ReshowDelay = 500;
+            toolTip2.ShowAlways = true;
 
         }
 
@@ -728,6 +780,37 @@ namespace WyBackupFile
             this.ShowInTaskbar = true;
             //托盘区图标隐藏 
             notifyIcon1.Visible = false;
+        }
+
+        private void autoRunCB_MouseHover(object sender, EventArgs e)
+        {
+            toolTip1.SetToolTip(this.autoRunCB, "软件运行则自动启动备份,前提需要先设置好上面的参数");
+        }
+
+        private void autoRunCB_Click(object sender, EventArgs e)
+        {
+            if (autoRunCB.Checked == true)
+            {
+                if (checkPath()) 
+                {
+                    autoRunCB.Checked = true;
+                    config.IsAutoBackup = true;
+                }
+            }
+            else 
+            {
+                autoRunCB.Checked = false;
+                config.IsAutoBackup = false;
+            }
+            saveConfigXml();
+        }
+
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            if (config.IsAutoBackup)
+            {
+                realAtuoBackup();
+            }
         }
     }
 }
